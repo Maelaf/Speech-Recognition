@@ -7,7 +7,7 @@ headers = {'authorization': API_KEY_ASSEMBLYAI}
 upload_endpoint = "https://api.assemblyai.com/v2/upload"
 transcript_endpoint = "https://api.assemblyai.com/v2/transcript"
 filename =sys.argv[1]
-def upload():
+def upload(filename):
     def read_file(filename, chunk_size=5242880):
         with open(filename, 'rb') as _file:
             while True:
@@ -30,14 +30,18 @@ def upload():
 # Start the transcription process
 
 
-def transcribe():
-    trancript_request = { "audio_url": audio_url }
+def transcribe(audio_url):
+    transcript_request = { "audio_url": audio_url }
 
-    transcript_response = requests.post(transcript_endpoint, json=trancript_request, headers=headers)
+    transcript_response = requests.post(transcript_endpoint, json=transcript_request, headers=headers)
     
-    job_id = trancript_request.json(['id'])
+    job_id = transcript_response.json()['id']
     return job_id
 
+
+audio_url= upload(filename)
+job_id= transcribe(audio_url)
+print(job_id)
 # keep polling the api till the transcription is done
 
 #save the transcription to a file
