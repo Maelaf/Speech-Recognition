@@ -15,7 +15,7 @@ def read_file(filename, chunk_size=5242880):
                 break
             yield data
 
-headers = {'authorization': "API_KEY_ASSE<BLYAI"}
+headers = {'authorization': 'API_KEY_ASSEBLYAI'}
 response = requests.post(upload_endpoint,
                         headers=headers,
                         data=read_file(filename))
