@@ -45,10 +45,22 @@ transcript_id= transcribe(audio_url)
 
 
 # keep polling the api till the transcription is done
- 
-polling_endpoint = transcript_endpoint + '/' + transcript_id
-polling_response = requests.get(polling_endpoint, headers=headers)
+def poll(transcript_id):
+    polling_endpoint = transcript_endpoint + '/' + transcript_id
+    polling_response = requests.get(polling_endpoint, headers=headers)
+    return polling_response.json()
 
-print(polling_response.json())
+def get_transcription_result_url():
+    transcript_id = transcribe()
+
+    while True:
+        data = poll(transcirpt_id)
+        polling_response = requests.get(polling_endpoint, headers=headers)
+        if data['status'] == 'completed':
+
+            return polling_response
+        elif data['status'] == 'error':
+            return "error"
+
 
 #save the transcription to a file
