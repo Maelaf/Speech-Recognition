@@ -6,7 +6,7 @@ import sys
 headers = {'authorization': API_KEY_ASSEMBLYAI}
 upload_endpoint = "https://api.assemblyai.com/v2/upload"
 transcript_endpoint = "https://api.assemblyai.com/v2/transcript"
-filename =sys.argv[0]
+filename =sys.argv[1]
 def upload(filename):
     def read_file(filename, chunk_size=5242880):
         with open(filename, 'rb') as _file:
@@ -44,6 +44,7 @@ def transcribe(audio_url):
 # keep polling the api till the transcription is done
 def poll(transcript_id):
     polling_endpoint = transcript_endpoint + '/' + transcript_id
+
     polling_response = requests.get(polling_endpoint, headers=headers)
     return polling_response.json()
 
@@ -52,15 +53,32 @@ def get_transcription_result_url(audio_url):
 
     while True:
         data = poll(transcript_id)
-        polling_response = requests.get(polling_endpoint, headers=headers)
+        polling_endpoint = transcript_endpoint + '/' + transcript_id
+        polling_response = requests.get( polling_endpoint, headers=headers)
         if data['status'] == 'completed':
 
             return data, None
         elif data['status'] == 'error':
             return data, data["error"]
 
-audio_url = upload(filename)
-data, error = get_transcription_result_url (audio_url)
+
 
 
 #save the transcription to a file
+
+
+
+def save_transcript(audio_url):
+    data, error = get_transcription_result_url (audio_url)
+    if data:
+
+        text_filename = filename + ".txt"
+
+        with open(text_filename, "w") as f:
+            f.write(data['text'])
+        print('Transcription saved!')
+    elif error:
+        print("Error!", error)
+
+
+audio_url = upload(filename)
