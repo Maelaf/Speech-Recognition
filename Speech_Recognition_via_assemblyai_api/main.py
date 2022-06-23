@@ -40,8 +40,15 @@ def transcribe(audio_url):
 
 
 audio_url= upload(filename)
-job_id= transcribe(audio_url)
-print(job_id)
+transcript_id= transcribe(audio_url)
+
+
+
 # keep polling the api till the transcription is done
+ 
+polling_endpoint = transcript_endpoint + '/' + transcript_id
+polling_response = requests.get(polling_endpoint, headers=headers)
+
+print(polling_response)
 
 #save the transcription to a file
