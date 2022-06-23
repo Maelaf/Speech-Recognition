@@ -15,6 +15,7 @@ def upload(filename):
                 if not data:
                     break
                 yield data
+    print('upload')
 
 
     upload_response = requests.post(upload_endpoint,
@@ -37,6 +38,7 @@ def transcribe(audio_url):
     
     job_id = transcript_response.json()['id']
     return job_id
+    print('transcirbe')
 
 
 
@@ -47,6 +49,7 @@ def poll(transcript_id):
 
     polling_response = requests.get(polling_endpoint, headers=headers)
     return polling_response.json()
+    print('poll')
 
 def get_transcription_result_url(audio_url):
     transcript_id = transcribe(audio_url)
@@ -60,7 +63,7 @@ def get_transcription_result_url(audio_url):
             return data, None
         elif data['status'] == 'error':
             return data, data["error"]
-
+    print('get trancript')
 
 
 
@@ -71,7 +74,6 @@ def get_transcription_result_url(audio_url):
 def save_transcript(audio_url):
     data, error = get_transcription_result_url (audio_url)
     if data:
-
         text_filename = filename + ".txt"
 
         with open(text_filename, "w") as f:
@@ -82,3 +84,4 @@ def save_transcript(audio_url):
 
 
 audio_url = upload(filename)
+save_transcript(audio_url)
