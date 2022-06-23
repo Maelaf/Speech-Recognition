@@ -6,7 +6,7 @@ import sys
 headers = {'authorization': API_KEY_ASSEMBLYAI}
 upload_endpoint = "https://api.assemblyai.com/v2/upload"
 transcript_endpoint = "https://api.assemblyai.com/v2/transcript"
-filename =sys.argv[1]
+filename =sys.argv[0]
 def upload(filename):
     def read_file(filename, chunk_size=5242880):
         with open(filename, 'rb') as _file:
@@ -49,6 +49,6 @@ transcript_id= transcribe(audio_url)
 polling_endpoint = transcript_endpoint + '/' + transcript_id
 polling_response = requests.get(polling_endpoint, headers=headers)
 
-print(polling_response)
+print(polling_response.json())
 
 #save the transcription to a file
